@@ -10,7 +10,7 @@ import { Heading } from "./heading";
 export const ListingOverview = () => {
   const { data: listings } = api.listings.getAll.useQuery({
     accessibility: "PUBLIC",
-    activity: "ACTIVE",
+    activity: "INACTIVE",
   });
 
   const t = useTranslations();
@@ -75,10 +75,10 @@ export const ListingOverview = () => {
               </span>
             </div>
             <div className="group relative">
-              <h3 className="text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+              <Heading variant="h3" className="group-hover:text-gray-600">
                 <span className="absolute inset-0" />
                 {listing.address}
-              </h3>
+              </Heading>
               <p className="text-sm leading-6 text-gray-600 line-clamp-3">
                 {listing.zipcode} {listing.city}
               </p>
