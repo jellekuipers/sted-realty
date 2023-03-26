@@ -5,7 +5,7 @@ export default function Document() {
     <Html>
       <Head>
         <meta name="description" content="sted" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </Head>
       <body>

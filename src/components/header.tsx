@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const t = useTranslations();
 
-  const navigation = [
-    { name: t("listings"), href: "#" },
-    { name: t("about"), href: "#" },
-  ];
+  const navigation = [{ name: t("listings"), href: "#" }];
 
   return (
     <header className="bg-white">
@@ -19,7 +17,7 @@ export const Header = () => {
         aria-label="Global"
       >
         <div className="flex lg:flex-1 lg:gap-x-12">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">sted</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -34,11 +32,11 @@ export const Header = () => {
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-          </a>
+          </Link>
           <div className="hidden lg:flex lg:gap-x-12">
-            <a href="#" className="font-semibold leading-6 text-gray-900">
+            <Link href="#" className="font-semibold leading-6 text-gray-900">
               {t("listings")}
-            </a>
+            </Link>
           </div>
         </div>
         <div className="flex lg:hidden">
@@ -64,13 +62,13 @@ export const Header = () => {
             </svg>
           </button>
         </div>
-        <div className="hidden lg:gap-x-12 lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="font-semibold leading-6 text-gray-900">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
+          <Link href="#" className="font-semibold leading-6 text-gray-900">
             {t("sign_up")}
-          </a>
-          <a href="#" className="font-semibold leading-6 text-gray-900">
+          </Link>
+          <Link href="#" className="font-semibold leading-6 text-gray-900">
             {t("sign_in")}
-          </a>
+          </Link>
         </div>
       </nav>
       <Dialog
@@ -82,7 +80,7 @@ export const Header = () => {
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">sted</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +95,7 @@ export const Header = () => {
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
-            </a>
+            </Link>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -123,28 +121,28 @@ export const Header = () => {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
                     className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="py-6">
-                <a
+                <Link
                   href="#"
                   className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   {t("sign_up")}
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#"
                   className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   {t("sign_in")}
-                </a>
+                </Link>
               </div>
             </div>
           </div>
