@@ -1,12 +1,10 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
-import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
 import { ListingOverview } from "~/components/listing-overview";
 
 const Home: NextPage = () => {
   return (
     <Layout>
-      <Heading variant="h1">sted</Heading>
       <ListingOverview />
     </Layout>
   );
