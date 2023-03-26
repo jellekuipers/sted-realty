@@ -7,7 +7,7 @@ import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
 
-const Home: NextPage = () => {
+const Listings: NextPage = () => {
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAllByStatus.useQuery({
       accessibility: "PUBLIC",
@@ -21,7 +21,7 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Listings;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const ssg = createProxySSGHelpers({
@@ -40,7 +40,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       trpcState: ssg.dehydrate(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       messages: (
-        await import(`../translations/${context.locale as string}.json`)
+        await import(`../../translations/${context.locale as string}.json`)
       ).default,
     },
   };

@@ -14,12 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -47,14 +41,32 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserRole {
+  ADMIN
+  BUYER
+  SELLER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
+  status        UserStatus @default(PENDING)
+  role          UserRole
   accounts      Account[]
   sessions      Session[]
+  listings      Listing[]
+  bids          Bid[]
+  following     Listing[]  @relation("ListingFollowers")
+  invitations   Listing[]  @relation("ListingInvitees")
 }
 
 model VerificationToken {
@@ -63,4 +75,62 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum BiddingStatus {
+  CLOSED
+  OPEN
+  PAUSED
+  UPCOMING
+}
+
+enum BidStatus {
+  ACCEPTED
+  PENDING
+  REJECTED
+  REVOKED
+}
+
+enum ListingAccessibility {
+  PRIVATE
+  PUBLIC
+}
+
+enum ListingActivity {
+  ACTIVE
+  INACTIVE
+}
+
+model Listing {
+  id            String               @id @default(cuid())
+  accessibility ListingAccessibility @default(PUBLIC)
+  activity      ListingActivity      @default(INACTIVE)
+  address       String
+  image         String?
+  askingPrice   Decimal?             @db.Money
+  biddingEnds   DateTime?
+  biddingStarts DateTime?
+  city          String
+  slug          String               @unique
+  reservePrice  Decimal?             @db.Money
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  zipcode       String
+  followers     User[]               @relation("ListingFollowers")
+  invitees      User[]               @relation("ListingInvitees")
+  bids          Bid[]                @relation("ListingBids")
+  userId        String
+  user          User                 @relation(fields: [userId], references: [id])
+}
+
+model Bid {
+  id        String    @id @default(cuid())
+  amount    Decimal   @db.Money
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  listing   Listing   @relation("ListingBids", fields: [listingId], references: [id])
+  listingId String
+  status    BidStatus @default(PENDING)
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
 }
