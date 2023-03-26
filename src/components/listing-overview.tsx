@@ -10,7 +10,7 @@ import { Heading } from "./heading";
 export const ListingOverview = () => {
   const { data: listings } = api.listings.getAll.useQuery({
     accessibility: "PUBLIC",
-    activity: "INACTIVE",
+    activity: "ACTIVE",
   });
 
   const t = useTranslations();

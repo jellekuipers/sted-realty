@@ -2,13 +2,12 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  const { status } = useSession();
   const t = useTranslations();
-
-  const navigation = [{ name: t("listings"), href: "#" }];
 
   return (
     <header className="bg-white">
@@ -30,7 +29,10 @@ export const Header = () => {
             </svg>
           </Link>
           <div className="hidden lg:flex lg:gap-x-12">
-            <Link href="#" className="font-semibold leading-6 text-gray-900">
+            <Link
+              href="/listings"
+              className="font-semibold leading-6 text-gray-900"
+            >
               {t("listings")}
             </Link>
           </div>
@@ -51,14 +53,38 @@ export const Header = () => {
             </svg>
           </button>
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
-          <Link href="#" className="font-semibold leading-6 text-gray-900">
-            {t("sign_up")}
-          </Link>
-          <Link href="#" className="font-semibold leading-6 text-gray-900">
-            {t("sign_in")}
-          </Link>
-        </div>
+        {status === "authenticated" && (
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
+            <Link
+              href="/profile"
+              className="font-semibold leading-6 text-gray-900"
+            >
+              {t("profile")}
+            </Link>
+            <button
+              onClick={() => void signOut()}
+              className="font-semibold leading-6 text-gray-900"
+            >
+              {t("sign_out")}
+            </button>
+          </div>
+        )}
+        {status === "unauthenticated" && (
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
+            <button
+              onClick={() => void signIn()}
+              className="font-semibold leading-6 text-gray-900"
+            >
+              {t("sign_up")}
+            </button>
+            <button
+              onClick={() => void signIn()}
+              className="font-semibold leading-6 text-gray-900"
+            >
+              {t("sign_in")}
+            </button>
+          </div>
+        )}
       </nav>
       <Dialog
         as="div"
@@ -99,30 +125,45 @@ export const Header = () => {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                {navigation.map((item) => (
+                <Link
+                  href="/listings"
+                  className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  {t("listings")}
+                </Link>
+              </div>
+              {status === "authenticated" && (
+                <div className="py-6">
                   <Link
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    href="/profile"
+                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
-                    {item.name}
+                    {t("profile")}
                   </Link>
-                ))}
-              </div>
-              <div className="py-6">
-                <Link
-                  href="#"
-                  className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  {t("sign_up")}
-                </Link>
-                <Link
-                  href="#"
-                  className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  {t("sign_in")}
-                </Link>
-              </div>
+                  <button
+                    onClick={() => void signOut()}
+                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    {t("sign_out")}
+                  </button>
+                </div>
+              )}
+              {status === "unauthenticated" && (
+                <div className="py-6">
+                  <button
+                    onClick={() => void signIn()}
+                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    {t("sign_up")}
+                  </button>
+                  <button
+                    onClick={() => void signIn()}
+                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    {t("sign_in")}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Panel>

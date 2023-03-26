@@ -4,8 +4,9 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-// import { env } from "~/env.mjs";
+import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 import { type Role } from "@prisma/client";
 
@@ -48,6 +49,18 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
+    EmailProvider({
+      server: {
+        host: env.EMAIL_HOST,
+        port: Number(env.EMAIL_PORT),
+        auth: {
+          user: env.EMAIL_USER,
+          pass: env.EMAIL_PASSWORD,
+        },
+      },
+      from: env.EMAIL_FROM,
+      // maxAge: 24 * 60 * 60, // How long email links are valid for (default 24h)
+    }),
     /**
      * ...add more providers here.
      *
