@@ -1,18 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
-import { type ListingActivity } from "@prisma/client";
+import { type Listing, type ListingActivity } from "@prisma/client";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { api } from "~/utils/api";
 import { Heading } from "./heading";
 
-export const ListingOverview = () => {
-  const { data: listings } = api.listings.getAll.useQuery({
-    accessibility: "PUBLIC",
-    activity: "ACTIVE",
-  });
-
+export const ListingOverview = ({
+  listings,
+  loading,
+}: {
+  listings?: Listing[];
+  loading: boolean;
+}) => {
   const t = useTranslations();
 
   const listingStatus = (status: ListingActivity) => {
@@ -23,6 +23,8 @@ export const ListingOverview = () => {
         return "inactive";
     }
   };
+
+  if (loading) return null;
 
   if (!listings?.length)
     return <Heading variant="h3">{t("no_listings")}</Heading>;

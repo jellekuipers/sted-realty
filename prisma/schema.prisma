@@ -41,25 +41,32 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Role {
+enum UserRole {
   ADMIN
   BUYER
   SELLER
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
-  role          Role
+  status        UserStatus @default(PENDING)
+  role          UserRole
   accounts      Account[]
   sessions      Session[]
   listings      Listing[]
   bids          Bid[]
-  following     Listing[] @relation("ListingFollowers")
-  invitations   Listing[] @relation("ListingInvitees")
+  following     Listing[]  @relation("ListingFollowers")
+  invitations   Listing[]  @relation("ListingInvitees")
 }
 
 model VerificationToken {

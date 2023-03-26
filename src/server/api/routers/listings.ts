@@ -11,7 +11,14 @@ import {
 } from "~/server/api/trpc";
 
 export const listingRouter = createTRPCRouter({
-  getAll: publicProcedure
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.listing.findMany({
+      include: {
+        _count: true,
+      },
+    });
+  }),
+  getAllByStatus: publicProcedure
     .input(
       z.object({
         accessibility: z.custom<ListingAccessibility>(),

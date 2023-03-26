@@ -5,6 +5,7 @@ async function main() {
     data: {
       email: "info+sted@jellekuipers.com",
       role: "ADMIN",
+      status: "ACTIVE",
     },
   });
 
@@ -12,6 +13,7 @@ async function main() {
     data: {
       email: "info@jellekuipers.com",
       role: "SELLER",
+      status: "ACTIVE",
     },
   });
 

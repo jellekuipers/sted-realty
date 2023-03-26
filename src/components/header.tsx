@@ -6,8 +6,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const t = useTranslations();
+
+  const hasAdminRole = session?.user.role === "ADMIN";
+  const hasUserRole =
+    session?.user.role === "BUYER" || session?.user.role === "SELLER";
+  const isAuthenticated = status === "authenticated";
+  const isUnauthenticated = status === "unauthenticated";
 
   return (
     <header className="bg-white">
@@ -53,14 +59,24 @@ export const Header = () => {
             </svg>
           </button>
         </div>
-        {status === "authenticated" && (
+        {isAuthenticated && (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
-            <Link
-              href="/profile"
-              className="font-semibold leading-6 text-gray-900"
-            >
-              {t("profile")}
-            </Link>
+            {hasAdminRole && (
+              <Link
+                href="/management"
+                className="font-semibold leading-6 text-gray-900"
+              >
+                {t("management")}
+              </Link>
+            )}
+            {hasUserRole && (
+              <Link
+                href="/profile"
+                className="font-semibold leading-6 text-gray-900"
+              >
+                {t("profile")}
+              </Link>
+            )}
             <button
               onClick={() => void signOut()}
               className="font-semibold leading-6 text-gray-900"
@@ -69,7 +85,7 @@ export const Header = () => {
             </button>
           </div>
         )}
-        {status === "unauthenticated" && (
+        {isUnauthenticated && (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
             <button
               onClick={() => void signIn()}
@@ -132,14 +148,24 @@ export const Header = () => {
                   {t("listings")}
                 </Link>
               </div>
-              {status === "authenticated" && (
+              {isAuthenticated && (
                 <div className="py-6">
-                  <Link
-                    href="/profile"
-                    className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    {t("profile")}
-                  </Link>
+                  {hasAdminRole && (
+                    <Link
+                      href="/management"
+                      className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      {t("management")}
+                    </Link>
+                  )}
+                  {hasUserRole && (
+                    <Link
+                      href="/profile"
+                      className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      {t("profile")}
+                    </Link>
+                  )}
                   <button
                     onClick={() => void signOut()}
                     className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -148,7 +174,7 @@ export const Header = () => {
                   </button>
                 </div>
               )}
-              {status === "unauthenticated" && (
+              {isUnauthenticated && (
                 <div className="py-6">
                   <button
                     onClick={() => void signIn()}

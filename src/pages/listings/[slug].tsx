@@ -1,11 +1,14 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
+import { useTranslations } from "next-intl";
+import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
-import { ListingOverview } from "~/components/listing-overview";
 
 const Listing: NextPage = () => {
+  const t = useTranslations();
+
   return (
     <Layout>
-      <ListingOverview />
+      <Heading variant="h1">{t("listings")}</Heading>
     </Layout>
   );
 };
