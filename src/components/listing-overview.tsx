@@ -7,7 +7,10 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 
 export const ListingOverview = () => {
-  const { data: listings } = api.listings.getAll.useQuery();
+  const { data: listings } = api.listings.getAll.useQuery({
+    accessibility: "PUBLIC",
+    activity: "ACTIVE",
+  });
 
   const t = useTranslations();
 

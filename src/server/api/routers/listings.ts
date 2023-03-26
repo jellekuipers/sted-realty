@@ -1,3 +1,7 @@
+import {
+  type ListingActivity,
+  type ListingAccessibility,
+} from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -7,9 +11,52 @@ import {
 } from "~/server/api/trpc";
 
 export const listingRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.listing.findMany();
-  }),
+  getAll: publicProcedure
+    .input(
+      z.object({
+        accessibility: z.custom<ListingAccessibility>(),
+        activity: z.custom<ListingActivity>(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.listing.findMany({
+        where: {
+          accessibility: input.accessibility,
+          activity: input.activity,
+        },
+        include: {
+          _count: true,
+        },
+      });
+    }),
+  getCount: publicProcedure
+    .input(
+      z.object({
+        accessibility: z.custom<ListingAccessibility>(),
+        activity: z.custom<ListingActivity>(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.listing.count({
+        where: {
+          accessibility: input.accessibility,
+          activity: input.activity,
+        },
+      });
+    }),
+  getAllByUserId: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.listing.findMany({
+        where: {
+          userId: input.userId,
+        },
+      });
+    }),
   getById: protectedProcedure
     .input(
       z.object({
