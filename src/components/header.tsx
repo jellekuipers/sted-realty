@@ -63,6 +63,14 @@ export const Header = () => {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
             {hasAdminRole && (
               <Link
+                href="/admin"
+                className="font-semibold leading-6 text-gray-900"
+              >
+                {t("admin")}
+              </Link>
+            )}
+            {hasUserRole && (
+              <Link
                 href="/management"
                 className="font-semibold leading-6 text-gray-900"
               >
@@ -151,6 +159,14 @@ export const Header = () => {
               {isAuthenticated && (
                 <div className="py-6">
                   {hasAdminRole && (
+                    <Link
+                      href="/management"
+                      className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      {t("management")}
+                    </Link>
+                  )}
+                  {hasUserRole && (
                     <Link
                       href="/management"
                       className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"

@@ -15,7 +15,7 @@ export const Footer = () => {
         >
           <Link
             href="/listings"
-            className="block leading-6 text-gray-600 hover:text-gray-900"
+            className="block leading-6 text-gray-600 hover:opacity-80"
           >
             {t("listings")}
           </Link>
@@ -23,13 +23,13 @@ export const Footer = () => {
             <>
               <Link
                 href="/profile"
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("profile")}
               </Link>
               <button
                 onClick={() => void signOut()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("sign_out")}
               </button>
@@ -39,13 +39,13 @@ export const Footer = () => {
             <>
               <button
                 onClick={() => void signIn()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("sign_up")}
               </button>
               <button
                 onClick={() => void signIn()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("sign_in")}
               </button>

@@ -11,7 +11,7 @@ import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 
-const Management: NextPage = () => {
+const Admin: NextPage = () => {
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAll.useQuery();
   const t = useTranslations();
@@ -25,7 +25,7 @@ const Management: NextPage = () => {
             href="/listings/new"
             className="inline-flex items-center rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           >
-            {t("add_listing")}
+            Nieuw aanbod
           </Link>
         </div>
       </div>
@@ -34,7 +34,7 @@ const Management: NextPage = () => {
   );
 };
 
-export default Management;
+export default Admin;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const ssg = createProxySSGHelpers({
@@ -47,10 +47,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const session = await getServerAuthSession(context);
 
-  if (!session) {
+  if (!session || session.user.role !== "ADMIN") {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: "/",
         permanent: false,
       },
     };

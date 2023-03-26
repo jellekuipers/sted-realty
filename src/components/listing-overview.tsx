@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Heading } from "./heading";
+import { Skeleton } from "./skeleton";
 
 export const ListingOverview = ({
   listings,
@@ -24,7 +25,14 @@ export const ListingOverview = ({
     }
   };
 
-  if (loading) return null;
+  if (loading)
+    return (
+      <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-y-20 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    );
 
   if (!listings?.length)
     return <Heading variant="h3">{t("no_listings")}</Heading>;
@@ -36,21 +44,18 @@ export const ListingOverview = ({
           key={listing.id}
           className="flex flex-col items-start justify-between space-y-4"
         >
-          <Link href={`/listings/${listing.slug}`} className="relative w-full">
+          <div className="relative w-full">
             <img
               src={listing.image || "./placeholder.svg"}
               alt={`${listing.address} ${listing.zipcode}, ${listing.city}`}
               className={classNames(
-                "aspect-[16/9] w-full rounded-2xl bg-gray-50 sm:aspect-[2/1] lg:aspect-[3/2]",
+                "aspect-[16/9] w-full rounded bg-gray-50 sm:aspect-[2/1] lg:aspect-[3/2]",
                 listing.image ? "object-cover" : "object-contain"
               )}
             />
-            <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-100" />
-          </Link>
-          <Link
-            href={`/listings/${listing.slug}`}
-            className="w-full max-w-xl space-y-3"
-          >
+            <div className="absolute inset-0 rounded ring-1 ring-inset ring-gray-100" />
+          </div>
+          <div className="w-full max-w-xl space-y-3">
             <div className="flex items-center gap-x-4 text-xs">
               {listing.biddingEnds ? (
                 <time
@@ -76,16 +81,16 @@ export const ListingOverview = ({
                 {t(listingStatus(listing.activity))}
               </span>
             </div>
-            <div className="group relative">
-              <Heading variant="h3" className="group-hover:text-gray-600">
+            <Link href={`/listings/${listing.slug}`} className="group relative">
+              <Heading variant="h3" className="group-hover:opacity-80">
                 <span className="absolute inset-0" />
                 {listing.address}
               </Heading>
               <p className="text-sm leading-6 text-gray-600 line-clamp-3">
                 {listing.zipcode} {listing.city}
               </p>
-            </div>
-          </Link>
+            </Link>
+          </div>
         </article>
       ))}
     </div>
