@@ -100,16 +100,16 @@ export const ListingOverview = ({
               )}
             </div>
           </div>
-          <div className="w-full max-w-xl space-y-3">
-            <div className="flex items-center gap-x-4 text-xs">
+          <div className="w-full max-w-xl space-y-2">
+            <div className="flex items-center space-x-4 text-xs">
               {listing.biddingEnds ? (
                 <time
                   dateTime={dayjs(listing.biddingEnds).format(
-                    "DD-MM-YYYY HH:MM"
+                    "DD-MM-YYYY HH:mm"
                   )}
                   className="text-gray-500"
                 >
-                  {dayjs(listing.biddingEnds).format("DD-MM-YYYY HH:MM")}
+                  {dayjs(listing.biddingEnds).format("DD-MM-YYYY HH:mm")}
                 </time>
               ) : (
                 <span className="text-gray-500">
@@ -126,7 +126,7 @@ export const ListingOverview = ({
                 {t(listingStatus(listing.activity))}
               </span>
             </div>
-            <Link href={`/listings/${listing.slug}`} className="group relative">
+            <Link href={`/listings/${listing.slug}`} className="group block relative">
               <Heading variant="h3" className="group-hover:opacity-80">
                 <span className="absolute inset-0" />
                 {listing.address}

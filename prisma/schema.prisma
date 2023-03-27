@@ -107,12 +107,12 @@ model Listing {
   activity      ListingActivity      @default(INACTIVE)
   address       String
   image         String?
-  askingPrice   Decimal?             @db.Money
-  biddingEnds   DateTime?
-  biddingStarts DateTime?
+  askingPrice   String?
+  biddingEnds   String?
+  biddingStarts String?
   city          String
   slug          String               @unique
-  reservePrice  Decimal?             @db.Money
+  reservePrice  String?
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
   zipcode       String
@@ -125,7 +125,7 @@ model Listing {
 
 model Bid {
   id        String    @id @default(cuid())
-  amount    Decimal   @db.Money
+  amount    String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   listing   Listing   @relation("ListingBids", fields: [listingId], references: [id])

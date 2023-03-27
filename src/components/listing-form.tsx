@@ -3,7 +3,13 @@ import classNames from "classnames";
 import { useTranslations } from "next-intl";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
+export const ListingForm = ({
+  listing,
+  onSubmit,
+}: {
+  listing?: Listing | null;
+  onSubmit: SubmitHandler<Listing>;
+}) => {
   const t = useTranslations();
 
   const {
@@ -11,10 +17,30 @@ export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    ...(listing && { defaultValues: listing }),
+    defaultValues: listing ?? {},
   });
 
-  const onSubmit: SubmitHandler<Listing> = (data) => console.log(data);
+  const activityOptions = [
+    {
+      label: t("active"),
+      value: "ACTIVE",
+    },
+    {
+      label: t("inactive"),
+      value: "INACTIVE",
+    },
+  ];
+
+  const accessibilityOptions = [
+    {
+      label: t("private"),
+      value: "PRIVATE",
+    },
+    {
+      label: t("public"),
+      value: "PUBLIC",
+    },
+  ];
 
   return (
     <form
@@ -129,7 +155,7 @@ export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
                     type="number"
                     id="askingPrice"
                     className={classNames(
-                      "block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                      "block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
                       errors?.askingPrice
                         ? "focus:ring-red-400"
                         : "focus:ring-gray-600"
@@ -159,7 +185,7 @@ export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
                     type="number"
                     id="reservePrice"
                     className={classNames(
-                      "block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                      "block w-full rounded-md border-0 py-1.5 pl-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
                       errors?.reservePrice
                         ? "focus:ring-red-400"
                         : "focus:ring-gray-600"
@@ -275,6 +301,65 @@ export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
                     {t("image_instructions")}
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="border-b border-gray-900/10 pb-12">
+          <h2 className="text-base font-semibold leading-7 text-gray-900">
+            {t("listing_status")}
+          </h2>
+          <p className="mt-1 text-sm leading-6 text-gray-600">
+            {t("listing_status_information")}
+          </p>
+          <div className="mt-10 grid grid-cols-1 gap-y-8 gap-x-6 sm:grid-cols-6">
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="activity"
+                className={classNames(
+                  "block text-sm font-medium leading-6",
+                  errors?.activity ? "text-red-400" : "text-gray-900"
+                )}
+              >
+                {t("activity")}
+              </label>
+              <div className="mt-2">
+                <select
+                  id="activity"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6"
+                  {...register("activity")}
+                >
+                  {activityOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="accessibility"
+                className={classNames(
+                  "block text-sm font-medium leading-6",
+                  errors?.accessibility ? "text-red-400" : "text-gray-900"
+                )}
+              >
+                {t("accessibility")}
+              </label>
+              <div className="mt-2">
+                <select
+                  id="accessibility"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm sm:leading-6"
+                  disabled
+                  {...register("accessibility")}
+                >
+                  {accessibilityOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>

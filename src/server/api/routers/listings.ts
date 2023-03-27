@@ -4,7 +4,6 @@ import {
 } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -84,6 +83,36 @@ export const listingRouter = createTRPCRouter({
         where: {
           slug: input.slug,
         },
+      });
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        accessibility: z.custom<ListingAccessibility>(),
+        activity: z.custom<ListingActivity>(),
+        address: z.string(),
+        askingPrice: z.string().nullable().optional(),
+        biddingEnds: z.string().nullable().optional(),
+        biddingStarts: z.string().nullable().optional(),
+        city: z.string(),
+        reservePrice: z.string().nullable().optional(),
+        userId: z.string(),
+        zipcode: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      if (!ctx.session) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const { id, ...data } = input;
+
+      return ctx.prisma.listing.update({
+        where: {
+          id,
+        },
+        data,
       });
     }),
 });

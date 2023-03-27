@@ -1,5 +1,7 @@
+import { type Listing } from "@prisma/client";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { type GetServerSidePropsContext, type NextPage } from "next";
+import { type SubmitHandler } from "react-hook-form";
 import superjson from "superjson";
 import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
@@ -12,6 +14,15 @@ import { api } from "~/utils/api";
 const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
   const { data: listing } = api.listings.getBySlug.useQuery({ slug });
 
+  const apiContext = api.useContext();
+
+  const updateListing = api.listings.update.useMutation({
+    onSuccess: () => apiContext.listings.getBySlug.refetch({ slug }),
+  });
+
+  const onSubmit: SubmitHandler<Listing> = async (data) =>
+    await updateListing.mutateAsync(data);
+
   return (
     <Layout>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
@@ -19,7 +30,7 @@ const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
           {listing?.address}, {listing?.zipcode} {listing?.city}
         </Heading>
       </div>
-      <ListingForm listing={listing} />
+      <ListingForm listing={listing} onSubmit={onSubmit} />
     </Layout>
   );
 };

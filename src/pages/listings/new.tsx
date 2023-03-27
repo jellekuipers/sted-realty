@@ -1,5 +1,7 @@
+import { type Listing } from "@prisma/client";
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { useTranslations } from "next-intl";
+import { type SubmitHandler } from "react-hook-form";
 import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
 import { ListingForm } from "~/components/listing-form";
@@ -8,12 +10,14 @@ import { getServerAuthSession } from "~/server/auth";
 const NewListing: NextPage = () => {
   const t = useTranslations();
 
+  const onSubmit: SubmitHandler<Listing> = (data) => console.log(data);
+
   return (
     <Layout>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
         <Heading variant="h1">{t("add_listing")}</Heading>
       </div>
-      <ListingForm />
+      <ListingForm onSubmit={onSubmit} />
     </Layout>
   );
 };
