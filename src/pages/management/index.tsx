@@ -16,7 +16,7 @@ const Management: NextPage = () => {
   const { data: session } = useSession();
 
   const { data: listings, isLoading: isLoadingListings } =
-    api.listings.getAll.useQuery();
+    api.listings.getAllByUserId.useQuery({ userId: session?.user.id });
 
   const t = useTranslations();
 
@@ -53,10 +53,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const session = await getServerAuthSession(context);
 
-  if (!session) {
+  if (!session || session.user.role !== "SELLER") {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: "/",
         permanent: false,
       },
     };

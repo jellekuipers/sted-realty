@@ -6,12 +6,13 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { data: session, status } = useSession();
+
   const t = useTranslations();
 
   const hasAdminRole = session?.user.role === "ADMIN";
-  const hasUserRole =
-    session?.user.role === "BUYER" || session?.user.role === "SELLER";
+  const hasSellerRole = session?.user.role === "SELLER";
   const isAuthenticated = status === "authenticated";
   const isUnauthenticated = status === "unauthenticated";
 
@@ -69,7 +70,7 @@ export const Header = () => {
                 {t("admin")}
               </Link>
             )}
-            {hasUserRole && (
+            {hasSellerRole && (
               <Link
                 href="/management"
                 className="font-semibold leading-6 text-gray-900"
@@ -77,7 +78,7 @@ export const Header = () => {
                 {t("management")}
               </Link>
             )}
-            {hasUserRole && (
+            {!hasAdminRole && (
               <Link
                 href="/profile"
                 className="font-semibold leading-6 text-gray-900"
@@ -166,7 +167,7 @@ export const Header = () => {
                       {t("management")}
                     </Link>
                   )}
-                  {hasUserRole && (
+                  {hasSellerRole && (
                     <Link
                       href="/management"
                       className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
@@ -174,7 +175,7 @@ export const Header = () => {
                       {t("management")}
                     </Link>
                   )}
-                  {hasUserRole && (
+                  {!hasAdminRole && (
                     <Link
                       href="/profile"
                       className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"

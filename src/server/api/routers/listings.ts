@@ -2,6 +2,7 @@ import {
   type ListingActivity,
   type ListingAccessibility,
 } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -12,6 +13,10 @@ import {
 
 export const listingRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
+    if (!ctx.session || ctx.session.user.role !== "ADMIN") {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
     return ctx.prisma.listing.findMany({
       include: {
         _count: true,
@@ -54,26 +59,17 @@ export const listingRouter = createTRPCRouter({
   getAllByUserId: protectedProcedure
     .input(
       z.object({
-        userId: z.string(),
+        userId: z.string().optional(),
       })
     )
     .query(({ ctx, input }) => {
+      if (!ctx.session || !input.userId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       return ctx.prisma.listing.findMany({
         where: {
           userId: input.userId,
-        },
-      });
-    }),
-  getById: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(({ ctx, input }) => {
-      return ctx.prisma.listing.findUnique({
-        where: {
-          id: input.id,
         },
       });
     }),
