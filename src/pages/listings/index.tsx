@@ -1,12 +1,12 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
+import { useSession } from "next-auth/react";
 import { Layout } from "~/components/layout";
 import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
 
 const Listings: NextPage = () => {
   const { data: session } = useSession();

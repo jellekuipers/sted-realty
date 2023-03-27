@@ -16,7 +16,7 @@ const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
     <Layout>
       <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
         <Heading variant="h1">
-          {listing?.address}, {listing?.city}
+          {listing?.address}, {listing?.zipcode} {listing?.city}
         </Heading>
       </div>
       <ListingForm listing={listing} />
