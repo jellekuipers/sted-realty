@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
+import { useSession } from "next-auth/react";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
@@ -12,8 +13,11 @@ import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 
 const Management: NextPage = () => {
+  const { data: session } = useSession();
+
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAll.useQuery();
+
   const t = useTranslations();
 
   return (
@@ -29,7 +33,11 @@ const Management: NextPage = () => {
           </Link>
         </div>
       </div>
-      <ListingOverview listings={listings} loading={isLoadingListings} />
+      <ListingOverview
+        listings={listings}
+        loading={isLoadingListings}
+        user={session?.user}
+      />
     </Layout>
   );
 };
@@ -43,8 +51,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     transformer: superjson,
   });
 
-  await ssg.listings.getAll.prefetch();
-
   const session = await getServerAuthSession(context);
 
   if (!session) {
@@ -55,6 +61,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+
+  await ssg.listings.getAllByUserId.prefetch({ userId: session.user.id });
 
   return {
     props: {

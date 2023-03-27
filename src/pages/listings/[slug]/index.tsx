@@ -1,34 +1,25 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { type GetServerSidePropsContext, type NextPage } from "next";
 import superjson from "superjson";
-import { useSession } from "next-auth/react";
+import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
-import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
 
-const Home: NextPage = () => {
-  const { data: session } = useSession();
-
-  const { data: listings, isLoading: isLoadingListings } =
-    api.listings.getAllByStatus.useQuery({
-      accessibility: "PUBLIC",
-      activity: "ACTIVE",
-    });
+const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
+  const { data: listing } = api.listings.getBySlug.useQuery({ slug });
 
   return (
     <Layout>
-      <ListingOverview
-        listings={listings}
-        loading={isLoadingListings}
-        user={session?.user}
-      />
+      <Heading variant="h1">
+        {listing?.address}, {listing?.city}
+      </Heading>
     </Layout>
   );
 };
 
-export default Home;
+export default EditListing;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const ssg = createProxySSGHelpers({
@@ -37,17 +28,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     transformer: superjson,
   });
 
-  await ssg.listings.getAllByStatus.prefetch({
-    accessibility: "PUBLIC",
-    activity: "ACTIVE",
-  });
+  const slug = context.params?.slug as string;
+
+  await ssg.listings.getBySlug.prefetch({ slug });
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
+      slug,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       messages: (
-        await import(`../translations/${context.locale as string}.json`)
+        await import(`../../../translations/${context.locale as string}.json`)
       ).default,
     },
   };

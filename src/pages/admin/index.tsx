@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
+import { useSession } from "next-auth/react";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
@@ -12,8 +13,11 @@ import { api } from "~/utils/api";
 import { appRouter } from "~/server/api/root";
 
 const Admin: NextPage = () => {
+  const { data: session } = useSession();
+
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAll.useQuery();
+
   const t = useTranslations();
 
   return (
@@ -25,11 +29,15 @@ const Admin: NextPage = () => {
             href="/listings/new"
             className="inline-flex items-center rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           >
-            Nieuw aanbod
+            {t("add_listing")}
           </Link>
         </div>
       </div>
-      <ListingOverview listings={listings} loading={isLoadingListings} />
+      <ListingOverview
+        listings={listings}
+        loading={isLoadingListings}
+        user={session?.user}
+      />
     </Layout>
   );
 };
@@ -43,9 +51,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     transformer: superjson,
   });
 
-  await ssg.listings.getAll.prefetch();
-
   const session = await getServerAuthSession(context);
+
+  await ssg.listings.getAll.prefetch();
 
   if (!session || session.user.role !== "ADMIN") {
     return {

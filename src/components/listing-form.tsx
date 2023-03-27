@@ -1,4 +1,6 @@
-export const ListingForm = () => {
+import { type Listing } from "@prisma/client";
+
+export const ListingForm = ({ listing }: { listing?: Listing | null }) => {
   return (
     <form className="mx-auto max-w-3xl">
       <div className="space-y-12">

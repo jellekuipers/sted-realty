@@ -6,8 +6,11 @@ import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 const Listings: NextPage = () => {
+  const { data: session } = useSession();
+
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAllByStatus.useQuery({
       accessibility: "PUBLIC",
@@ -16,7 +19,11 @@ const Listings: NextPage = () => {
 
   return (
     <Layout>
-      <ListingOverview listings={listings} loading={isLoadingListings} />
+      <ListingOverview
+        listings={listings}
+        loading={isLoadingListings}
+        user={session?.user}
+      />
     </Layout>
   );
 };
