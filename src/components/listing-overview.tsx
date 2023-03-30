@@ -19,8 +19,6 @@ export const ListingOverview = ({
 }) => {
   const t = useTranslations();
 
-  const userIsAdmin = user?.role === "ADMIN";
-
   const userIsListingOwner = ({
     listingUserId,
     userId,
@@ -28,6 +26,26 @@ export const ListingOverview = ({
     listingUserId: Listing["userId"];
     userId?: User["id"];
   }) => listingUserId === userId;
+
+  const userHasEditRights = ({
+    listing,
+    user,
+  }: {
+    listing: Listing;
+    user?: User;
+  }) => {
+    if (!user) return false;
+
+    const userIsAdmin = user?.role === "ADMIN";
+
+    return (
+      userIsAdmin ||
+      userIsListingOwner({
+        listingUserId: listing.userId,
+        userId: user.id,
+      })
+    );
+  };
 
   const listingStatus = (status: ListingActivity) => {
     switch (status) {
@@ -38,9 +56,12 @@ export const ListingOverview = ({
     }
   };
 
+  const gridClass =
+    "mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-y-20 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3";
+
   if (loading)
     return (
-      <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-y-20 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+      <div className={gridClass}>
         <Skeleton />
         <Skeleton />
         <Skeleton />
@@ -51,7 +72,7 @@ export const ListingOverview = ({
     return <Heading variant="h3">{t("no_listings")}</Heading>;
 
   return (
-    <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-y-20 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+    <div className={gridClass}>
       {listings?.map((listing) => (
         <article
           key={listing.id}
@@ -68,11 +89,7 @@ export const ListingOverview = ({
             />
             <div className="absolute inset-0 rounded ring-1 ring-inset ring-gray-100" />
             <div className="absolute right-4 top-4">
-              {userIsAdmin ||
-              userIsListingOwner({
-                listingUserId: listing.userId,
-                userId: user?.id,
-              }) ? (
+              {userHasEditRights({ listing, user }) ? (
                 <Link
                   href={`/listings/${listing.slug}/edit`}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white hover:opacity-80"
@@ -126,7 +143,10 @@ export const ListingOverview = ({
                 {t(listingStatus(listing.activity))}
               </span>
             </div>
-            <Link href={`/listings/${listing.slug}`} className="group block relative">
+            <Link
+              href={`/listings/${listing.slug}`}
+              className="group relative block"
+            >
               <Heading variant="h3" className="group-hover:opacity-80">
                 <span className="absolute inset-0" />
                 {listing.address}
