@@ -2,6 +2,7 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import superjson from "superjson";
 import { Heading } from "~/components/heading";
+import { HeadingContainer } from "~/components/heading-container";
 import { Layout } from "~/components/layout";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
@@ -12,9 +13,11 @@ const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
 
   return (
     <Layout>
-      <Heading variant="h1">
-        {listing?.address}, {listing?.city}
-      </Heading>
+      <HeadingContainer>
+        <Heading variant="h1">
+          {listing?.address}, {listing?.city}
+        </Heading>
+      </HeadingContainer>
     </Layout>
   );
 };

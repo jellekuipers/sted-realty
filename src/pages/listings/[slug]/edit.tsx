@@ -4,6 +4,7 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import { type SubmitHandler } from "react-hook-form";
 import superjson from "superjson";
 import { Heading } from "~/components/heading";
+import { HeadingContainer } from "~/components/heading-container";
 import { Layout } from "~/components/layout";
 import { ListingForm } from "~/components/listing-form";
 import { appRouter } from "~/server/api/root";
@@ -25,11 +26,11 @@ const EditListing: NextPage<{ slug: string }> = ({ slug }) => {
 
   return (
     <Layout>
-      <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
+      <HeadingContainer>
         <Heading variant="h1">
           {listing?.address}, {listing?.zipcode} {listing?.city}
         </Heading>
-      </div>
+      </HeadingContainer>
       <ListingForm listing={listing} onSubmit={onSubmit} />
     </Layout>
   );

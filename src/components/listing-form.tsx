@@ -1,5 +1,6 @@
 import { type Listing } from "@prisma/client";
 import classNames from "classnames";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
@@ -10,7 +11,10 @@ export const ListingForm = ({
   listing?: Listing | null;
   onSubmit: SubmitHandler<Listing>;
 }) => {
+  const { data: session } = useSession();
   const t = useTranslations();
+
+  const isAdmin = session?.user.role === "ADMIN";
 
   const {
     register,
@@ -351,7 +355,7 @@ export const ListingForm = ({
                 <select
                   id="accessibility"
                   className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-gray-600 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm sm:leading-6"
-                  disabled
+                  disabled={!isAdmin}
                   {...register("accessibility")}
                 >
                   {accessibilityOptions.map((option) => (

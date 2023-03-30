@@ -1,6 +1,7 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { useTranslations } from "next-intl";
 import { Heading } from "~/components/heading";
+import { HeadingContainer } from "~/components/heading-container";
 import { Layout } from "~/components/layout";
 import { getServerAuthSession } from "~/server/auth";
 
@@ -9,7 +10,9 @@ const Profile: NextPage = () => {
 
   return (
     <Layout>
-      <Heading variant="h1">{t("profile")}</Heading>
+      <HeadingContainer>
+        <Heading variant="h1">{t("profile")}</Heading>
+      </HeadingContainer>
     </Layout>
   );
 };

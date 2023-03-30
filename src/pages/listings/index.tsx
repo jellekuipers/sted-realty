@@ -7,9 +7,14 @@ import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
+import { Heading } from "~/components/heading";
+import { useTranslations } from "next-intl";
+import { HeadingContainer } from "~/components/heading-container";
 
 const Listings: NextPage = () => {
   const { data: session } = useSession();
+
+  const t = useTranslations();
 
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAllByStatus.useQuery({
@@ -19,6 +24,9 @@ const Listings: NextPage = () => {
 
   return (
     <Layout>
+      <HeadingContainer>
+        <Heading variant="h1">{t("listings")}</Heading>
+      </HeadingContainer>
       <ListingOverview
         listings={listings}
         loading={isLoadingListings}

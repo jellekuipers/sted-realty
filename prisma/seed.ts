@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import { prisma } from "../src/server/db";
 
 async function main() {
@@ -9,19 +10,61 @@ async function main() {
     },
   });
 
-  const firstSeller = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: "info+seller01@jellekuipers.com",
       role: "SELLER",
       status: "ACTIVE",
+      listings: {
+        createMany: {
+          data: [
+            {
+              address: "Isabellastraat 57",
+              city: "Oosterhout",
+              zipcode: "4901JP",
+              slug: slugify('Isabellastraat 57 4901JP Oosterhout'),
+            },
+            {
+              address: "De Wetering 53",
+              city: "Oosterhout",
+              zipcode: "4906CT",
+              slug: slugify('De Wetering 53 4906CT Oosterhout'),
+            },
+            {
+              address: "Zichtbeemd 20",
+              city: "Oosterhout",
+              zipcode: "4907DE",
+              slug: slugify('Zichtbeemd 20 4907DE Oosterhout'),
+            },
+            {
+              address: "Leijsenhoek 20",
+              city: "Oosterhout",
+              zipcode: "4901ET",
+              slug: slugify('Leijsenhoek 20 4901ET Oosterhout'),
+            },
+          ],
+        },
+      },
     },
   });
 
-  const secondSeller = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: "info+seller02@jellekuipers.com",
       role: "SELLER",
       status: "ACTIVE",
+      listings: {
+        createMany: {
+          data: [
+            {
+              address: "Essenburgstraat 19-03",
+              city: "Rotterdam",
+              zipcode: "3022MB",
+              slug: "essenburgstraat-19-03-3022mb-rotterdam",
+            },
+          ],
+        },
+      },
     },
   });
 
@@ -30,36 +73,6 @@ async function main() {
       email: "info+buyer@jellekuipers.com",
       role: "BUYER",
       status: "ACTIVE",
-    },
-  });
-
-  await prisma.listing.create({
-    data: {
-      address: "Isabellastraat 57",
-      city: "Oosterhout",
-      zipcode: "4901JP",
-      slug: "isabellastraat-59-4901jp-oosterhout",
-      userId: firstSeller?.id,
-    },
-  });
-
-  await prisma.listing.create({
-    data: {
-      address: "De Wetering 53",
-      city: "Oosterhout",
-      zipcode: "4906CT",
-      slug: "de-wetering-51-4906ct-oosterhout",
-      userId: firstSeller?.id,
-    },
-  });
-
-  await prisma.listing.create({
-    data: {
-      address: "Essenburgstraat 19-03",
-      city: "Rotterdam",
-      zipcode: "3022MB",
-      slug: "essenburgstraat-19-03-3022mb-rotterdam",
-      userId: secondSeller?.id,
     },
   });
 }
