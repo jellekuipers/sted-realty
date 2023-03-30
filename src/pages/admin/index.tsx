@@ -35,6 +35,7 @@ const Admin: NextPage = () => {
         listings={listings}
         loading={isLoadingListings}
         user={session?.user}
+        view="management"
       />
     </Layout>
   );

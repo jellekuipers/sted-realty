@@ -31,6 +31,7 @@ const Listings: NextPage = () => {
         listings={listings}
         loading={isLoadingListings}
         user={session?.user}
+        view="public"
       />
     </Layout>
   );

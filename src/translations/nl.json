@@ -13,6 +13,7 @@
   "cancel": "Annuleren",
   "city": "Stad",
   "close_menu": "Menu sluiten",
+  "closed": "Bieden gesloten",
   "dates_information": "Het aanbod kan alleen geactiveerd worden als alle velden zijn ingevuld",
   "dates": "Data",
   "get_started": "Aan de slag",
@@ -30,6 +31,7 @@
   "no_listings": "Geen aanbod",
   "not_yet_determinded": "Nog niet bekend",
   "open_menu": "Menu openen",
+  "open": "Bieden geopend",
   "or_drag_and_drop": "of sleep het in dit vak",
   "pricing_information": "Het aanbod kan alleen geactiveerd worden als alle velden zijn ingevuld",
   "pricing": "Prijsinformatie",
@@ -41,6 +43,7 @@
   "sign_in": "Inloggen",
   "sign_out": "Uitloggen",
   "sign_up": "Aanmelden",
+  "upcoming": "Bieden aanstaande",
   "upload_a_file": "Upload een bestand",
   "zip_code": "Postcode"
 }
