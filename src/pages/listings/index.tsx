@@ -1,6 +1,7 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
+import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 import { Layout } from "~/components/layout";
 import { ListingOverview } from "~/components/listing-overview";
@@ -8,8 +9,8 @@ import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
 import { Heading } from "~/components/heading";
-import { useTranslations } from "next-intl";
 import { HeadingContainer } from "~/components/heading-container";
+import { Filter } from "~/components/filter";
 
 const Listings: NextPage = () => {
   const { data: session } = useSession();
@@ -27,6 +28,7 @@ const Listings: NextPage = () => {
       <HeadingContainer>
         <Heading variant="h1">{t("listings")}</Heading>
       </HeadingContainer>
+      <Filter />
       <ListingOverview
         listings={listings}
         loading={isLoadingListings}
