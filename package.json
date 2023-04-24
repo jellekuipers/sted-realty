@@ -23,6 +23,7 @@
     "@trpc/server": "^10.18.0",
     "classnames": "^2.3.2",
     "dayjs": "^1.11.7",
+    "filter-query": "github:jellekuipers/filter-query",
     "next": "^13.2.4",
     "next-auth": "^4.20.1",
     "next-intl": "^2.12.0",

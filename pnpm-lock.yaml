@@ -24,6 +24,7 @@ specifiers:
   dayjs: ^1.11.7
   eslint: ^8.36.0
   eslint-config-next: ^13.2.4
+  filter-query: github:jellekuipers/filter-query
   next: ^13.2.4
   next-auth: ^4.20.1
   next-intl: ^2.12.0
@@ -53,6 +54,7 @@ dependencies:
   '@trpc/server': 10.18.0
   classnames: 2.3.2
   dayjs: 1.11.7
+  filter-query: github.com/jellekuipers/filter-query/c9c17851973e33b0fd6a3ec6a999a7c5984ac3c3
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.20.1_3tbpwx46tlrk4rci3doelizria
   next-intl: 2.12.0_next@13.2.4+react@18.2.0
@@ -3392,4 +3394,10 @@ packages:
 
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
+
+  github.com/jellekuipers/filter-query/c9c17851973e33b0fd6a3ec6a999a7c5984ac3c3:
+    resolution: {commit: c9c17851973e33b0fd6a3ec6a999a7c5984ac3c3, repo: git+ssh://git@github.com/jellekuipers/filter-query.git, type: git}
+    name: filter-query
+    version: 0.0.0
     dev: false

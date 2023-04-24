@@ -7,6 +7,8 @@ import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
+import { query } from "../../../filter-query/src/index";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -16,6 +18,12 @@ const Home: NextPage = () => {
       accessibility: "PUBLIC",
       activity: "ACTIVE",
     });
+
+    useEffect(() => {
+    if (typeof window !== undefined && typeof window === 'object') {
+      console.log(query);
+    }
+  }, []);
 
   return (
     <Layout>
