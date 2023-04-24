@@ -1,22 +1,38 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
+import { useSession } from "next-auth/react";
 import { Layout } from "~/components/layout";
 import { ListingOverview } from "~/components/listing-overview";
 import { appRouter } from "~/server/api/root";
 import { createInnerTRPCContext } from "~/server/api/trpc";
 import { api } from "~/utils/api";
+import { query } from "../../../filter-query/src/index";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
+  const { data: session } = useSession();
+
   const { data: listings, isLoading: isLoadingListings } =
     api.listings.getAllByStatus.useQuery({
       accessibility: "PUBLIC",
       activity: "ACTIVE",
     });
 
+    useEffect(() => {
+    if (typeof window !== undefined && typeof window === 'object') {
+      console.log(query);
+    }
+  }, []);
+
   return (
     <Layout>
-      <ListingOverview listings={listings} loading={isLoadingListings} />
+      <ListingOverview
+        listings={listings}
+        loading={isLoadingListings}
+        user={session?.user}
+        view="public"
+      />
     </Layout>
   );
 };

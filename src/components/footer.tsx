@@ -3,49 +3,62 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export const Footer = () => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
+
   const t = useTranslations();
+
+  const hasAdminRole = session?.user.role === "ADMIN";
+  const isAuthenticated = status === "authenticated";
+  const isUnauthenticated = status === "unauthenticated";
 
   return (
     <footer className="bg-white">
-      <div className="overflow-hidden py-20 px-6 sm:py-24 lg:px-8 space-y-12">
+      <div className="space-y-12 overflow-hidden py-20 px-6 sm:py-24 lg:px-8">
         <nav
-          className="-mb-6 space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:space-x-12"
+          className="-mb-6 space-y-4 sm:flex sm:justify-center sm:space-y-0 sm:space-x-12"
           aria-label="Footer"
         >
+          {isAuthenticated && hasAdminRole && (
+            <Link
+              href="/admin"
+              className="block leading-6 text-gray-600 hover:opacity-80"
+            >
+              {t("admin")}
+            </Link>
+          )}
           <Link
             href="/listings"
-            className="block leading-6 text-gray-600 hover:text-gray-900"
+            className="block leading-6 text-gray-600 hover:opacity-80"
           >
             {t("listings")}
           </Link>
-          {status === "authenticated" && (
-            <>
-              <Link
-                href="/profile"
-                className="block leading-6 text-gray-600 hover:text-gray-900"
-              >
-                {t("profile")}
-              </Link>
-              <button
-                onClick={() => void signOut()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
-              >
-                {t("sign_out")}
-              </button>
-            </>
+          {isAuthenticated && !hasAdminRole && (
+            <Link
+              href="/profile"
+              className="block leading-6 text-gray-600 hover:opacity-80"
+            >
+              {t("profile")}
+            </Link>
           )}
-          {status === "unauthenticated" && (
+          {isAuthenticated && (
+            <button
+              onClick={() => void signOut()}
+              className="block leading-6 text-gray-600 hover:opacity-80"
+            >
+              {t("sign_out")}
+            </button>
+          )}
+          {isUnauthenticated && (
             <>
               <button
                 onClick={() => void signIn()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("sign_up")}
               </button>
               <button
                 onClick={() => void signIn()}
-                className="block leading-6 text-gray-600 hover:text-gray-900"
+                className="block leading-6 text-gray-600 hover:opacity-80"
               >
                 {t("sign_in")}
               </button>

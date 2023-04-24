@@ -1,45 +1,47 @@
 import { type GetServerSidePropsContext, type NextPage } from "next";
+import { useTranslations } from "next-intl";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import superjson from "superjson";
-import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import { createInnerTRPCContext } from "~/server/api/trpc";
+import { Heading } from "~/components/heading";
 import { Layout } from "~/components/layout";
 import { ListingOverview } from "~/components/listing-overview";
-import { appRouter } from "~/server/api/root";
-import { createInnerTRPCContext } from "~/server/api/trpc";
+import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
-import { Heading } from "~/components/heading";
+import { appRouter } from "~/server/api/root";
+import { StyledLink } from "~/components/styled-link";
 import { HeadingContainer } from "~/components/heading-container";
-import { Filter } from "~/components/filter";
 
-const Listings: NextPage = () => {
+const Admin: NextPage = () => {
   const { data: session } = useSession();
 
-  const t = useTranslations();
-
   const { data: listings, isLoading: isLoadingListings } =
-    api.listings.getAllByStatus.useQuery({
-      accessibility: "PUBLIC",
-      activity: "ACTIVE",
-    });
+    api.listings.getAll.useQuery();
+
+  const t = useTranslations();
 
   return (
     <Layout>
       <HeadingContainer>
-        <Heading variant="h1">{t("listings")}</Heading>
+        <Heading variant="h1">{t("management")}</Heading>
+        <div className="mt-3 sm:mt-0 sm:ml-4">
+          <StyledLink href="/listings/new" variant="button">
+            {t("add_listing")}
+          </StyledLink>
+        </div>
       </HeadingContainer>
-      <Filter />
       <ListingOverview
         listings={listings}
         loading={isLoadingListings}
         user={session?.user}
-        view="public"
+        view="management"
       />
     </Layout>
   );
 };
 
-export default Listings;
+export default Admin;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const ssg = createProxySSGHelpers({
@@ -48,13 +50,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     transformer: superjson,
   });
 
-  await ssg.listings.getAllByStatus.prefetch({
-    accessibility: "PUBLIC",
-    activity: "ACTIVE",
-  });
+  const session = await getServerAuthSession(context);
+
+  await ssg.listings.getAll.prefetch();
+
+  if (!session || session.user.role !== "ADMIN") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
+      session,
       trpcState: ssg.dehydrate(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       messages: (
