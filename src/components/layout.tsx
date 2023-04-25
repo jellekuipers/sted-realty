@@ -17,7 +17,7 @@ export const Layout = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className="flex-1 p-6 lg:px-8">{children}</main>
+      <main className="flex-1 space-y-8 p-6 lg:px-8">{children}</main>
       <Footer />
     </div>
   );
